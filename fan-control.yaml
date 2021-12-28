@@ -1,0 +1,29 @@
+fan:
+  left:
+    pin: 23
+    trigger: l-
+    start: 60000
+    stop: 30000
+  right:
+    pin: 24
+    trigger: r-
+    start: 60000
+    stop: 30000
+
+mqtt:
+  broker: "192.168.178.38"
+  topic: "rack/+/temp"
+  username: "integration"
+  password: "u6zG4!2ZgmAfvhuUYRkKc!PJ8C^t6UU#sMoJ&E22"
+  server:
+    client_id: "temperature_control_server"
+  client:
+    client_id: "r-1-1"
+  client_id: "temperature_control_server"
+
+client:
+  name: "r-1"
+  path: "./test/temp"
+  timeout: 15
+
+debug: false

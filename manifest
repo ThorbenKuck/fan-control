@@ -1,0 +1,5 @@
+GPIO
+paho-mqtt
+pyinstaller
+pyyaml
+watchdog
