@@ -3,8 +3,8 @@ from time import sleep
 import paho.mqtt.client as mqtt
 from threading import Thread
 
-from ClientProperties import ClientProperties
-from MqttProperties import MqttProperties
+from types.ClientProperties import ClientProperties
+from types.MqttProperties import MqttProperties
 
 
 client_props: ClientProperties = ClientProperties("fan-control.yaml")

@@ -2,8 +2,8 @@ import RPi.GPIO as GPIO
 import paho.mqtt.client as mqtt
 import threading
 
-from MqttProperties import MqttProperties
-from ServerProperties import ServerProperties
+from types.MqttProperties import MqttProperties
+from types.ServerProperties import ServerProperties
 
 GPIO.setmode(GPIO.BCM)
 
