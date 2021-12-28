@@ -12,4 +12,4 @@ do
     esac
 done
 
-nohup bash -c 'exec -a fan-client /opt/fan-control/start-fan-client.sh' >"$log_target" 2>&1 &
+sudo | nohup bash -c 'exec -a fan-client /opt/fan-control/start-fan-client.sh' >"$log_target" 2>&1 &

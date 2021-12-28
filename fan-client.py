@@ -6,9 +6,9 @@ from threading import Thread
 from types.ClientProperties import ClientProperties
 from types.MqttProperties import MqttProperties
 
-
-client_props: ClientProperties = ClientProperties("fan-control.yaml")
-mqtt_props: MqttProperties = MqttProperties("fan-control.yaml")
+settings_path = "/usr/local/etc/fan-control/settings.yaml"
+client_props: ClientProperties = ClientProperties(settings_path)
+mqtt_props: MqttProperties = MqttProperties(settings_path)
 mqtt_props.topic = mqtt_props.topic.replace("+", client_props.name)
 mqtt_props.client_id = mqtt_props.client_id + "-client"
 debug_enabled = client_props.debug_enabled

@@ -2,27 +2,37 @@
 
 sudo apt install jq
 dir="/opt/fan-control"
+settings_dir="/usr/local/etc/fan-control/"
 
 if [ -d "$dir" ]; then
   bash "$dir/stop-fan-client.sh"
   bash "$dir/stop-fan-server.sh"
-  rm -rf "$dir"
+  sudo rm -rf "$dir"
 fi
 
-mkdir "$dir"
+sudo mkdir "$dir"
+sudo mkdir "$dir/make"
+sudo mkdir "$dir/download" # This is the directory, in which the new version is downloaded (if any is available)
 sudo cp -a --no-preserve=owner ./* "$dir/make"
 cd "$dir" || exit 12
-mkdir download/ # This is the directory, in which the new version is downloaded (if any is available)
 mv make/meta-inf/ ./
-mv scripts/* ./
+mv make/scripts/* ./
 
 cd make/ || exit 12
+
+if [ ! -d "$settings_dir" ]; then
+  sudo mkdir "$settings_dir"
+fi
+if [ ! -f "$settings_dir/settings.yaml" ]; then
+  cp "fan-control.yaml" "$settings_dir/settings.yaml"
+fi
+
 ./build.sh -a
 cp fan-server ../fan-server
 cp fan-client ../fan-client
 cd ..
 
-sudo ln -s "$dir/start-fan-client" /usr/local/bin/start-fan-client
-sudo ln -s "$dir/start-fan-server" /usr/local/bin/start-fan-server
-sudo ln -s "$dir/stop-fan-client" /usr/local/bin/stop-fan-client
-sudo ln -s "$dir/stop-fan-server" /usr/local/bin/stop-fan-server
+sudo ln -sf "$dir/start-fan-client.sh" /usr/local/bin/start-fan-client
+sudo ln -sf "$dir/start-fan-server.sh" /usr/local/bin/start-fan-server
+sudo ln -sf "$dir/stop-fan-client.sh" /usr/local/bin/stop-fan-client
+sudo ln -sf "$dir/stop-fan-server.sh" /usr/local/bin/stop-fan-server

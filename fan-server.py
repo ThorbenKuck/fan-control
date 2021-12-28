@@ -6,9 +6,10 @@ from types.MqttProperties import MqttProperties
 from types.ServerProperties import ServerProperties
 
 GPIO.setmode(GPIO.BCM)
+settings_path = "/usr/local/etc/fan-control/settings.yaml"
 
-mqtt_properties: MqttProperties = MqttProperties("fan-control.yaml")
-server_properties = ServerProperties("fan-control.yaml")
+mqtt_properties: MqttProperties = MqttProperties(settings_path)
+server_properties = ServerProperties(settings_path)
 mqtt_properties.client_id = mqtt_properties.client_id + "-server"
 
 
@@ -64,24 +65,29 @@ def release_waiting():
     semaphore.release()
 
 
-print("creating new instance", mqtt_properties.client_id)
-client = mqtt.Client(mqtt_properties.client_id)
-while True:
-    try:
-        client.on_connect = on_connect
-        client.on_message = on_message
-        client.on_disconnect = release_waiting
-        client.on_connect_fail = release_waiting
+def main():
+    print("creating new client instance", mqtt_properties.client_id)
+    client = mqtt.Client(mqtt_properties.client_id)
+    while True:
+        try:
+            client.on_connect = on_connect
+            client.on_message = on_message
+            client.on_disconnect = release_waiting
+            client.on_connect_fail = release_waiting
 
-        print("connecting to broker")
-        client.username_pw_set(
-            username=mqtt_properties.username,
-            password=mqtt_properties.password
-        )
-        client.connect(mqtt_properties.broker)
-        client.loop_start()
-        print("Subscribing to topic", mqtt_properties.topic)
-        client.subscribe(mqtt_properties.topic)
-        semaphore.acquire()
-    except Exception as e:
-        print(e)
+            print("connecting to broker")
+            client.username_pw_set(
+                username=mqtt_properties.username,
+                password=mqtt_properties.password
+            )
+            client.connect(mqtt_properties.broker)
+            client.loop_start()
+            print("Subscribing to topic", mqtt_properties.topic)
+            client.subscribe(mqtt_properties.topic)
+            semaphore.acquire()
+        except Exception as e:
+            print(e)
+
+
+if __name__ == '__main__':
+    main()

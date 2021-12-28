@@ -13,8 +13,8 @@ done
 rm -rf src/
 mkdir src/
 cp ./*.py src/
-cp types/ src/
-cp manifest src/
+cp -r types/ src/
+cp -r manifest src/
 
 # shellcheck disable=SC2164
 cd src/
