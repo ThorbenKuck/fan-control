@@ -1,6 +1,6 @@
 import yaml
 from datetime import datetime, timedelta
-from Fan import Fan
+from _Fan import Fan
 
 
 class ServerProperties:

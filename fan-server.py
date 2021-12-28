@@ -2,8 +2,8 @@ import RPi.GPIO as GPIO
 import paho.mqtt.client as mqtt
 import threading
 
-from types.MqttProperties import MqttProperties
-from types.ServerProperties import ServerProperties
+from _MqttProperties import MqttProperties
+from _ServerProperties import ServerProperties
 
 GPIO.setmode(GPIO.BCM)
 settings_path = "/usr/local/etc/fan-control/settings.yaml"
