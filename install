@@ -4,11 +4,13 @@ sudo apt install jq
 dir="/opt/fan-control"
 
 if [ -d "$dir" ]; then
+  bash "$dir/stop-fan-client.sh"
+  bash "$dir/stop-fan-server.sh"
   rm -rf "$dir"
 fi
 
 mkdir "$dir"
-sudo cp -a --no-preserve=owner ./* /opt/fan-control/make
+sudo cp -a --no-preserve=owner ./* "$dir/make"
 cd "$dir" || exit 12
 mkdir download/ # This is the directory, in which the new version is downloaded (if any is available)
 mv make/meta-inf/ ./
@@ -20,7 +22,7 @@ cp fan-server ../fan-server
 cp fan-client ../fan-client
 cd ..
 
-sudo ln -s /opt/ordner/start-fan-client /usr/local/bin/start-fan-client
-sudo ln -s /opt/ordner/start-fan-server /usr/local/bin/start-fan-server
-sudo ln -s /opt/ordner/stop-fan-client /usr/local/bin/stop-fan-client
-sudo ln -s /opt/ordner/stop-fan-server /usr/local/bin/stop-fan-server
+sudo ln -s "$dir/start-fan-client" /usr/local/bin/start-fan-client
+sudo ln -s "$dir/start-fan-server" /usr/local/bin/start-fan-server
+sudo ln -s "$dir/stop-fan-client" /usr/local/bin/stop-fan-client
+sudo ln -s "$dir/stop-fan-server" /usr/local/bin/stop-fan-server
