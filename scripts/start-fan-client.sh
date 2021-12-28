@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pgrep -x fan-client >/dev/null && echo "The fan-client is still running. Please stop it before you continue"; exit 12 || echo "Starting the fan-client"
+stop-fan-client
 
 log_target=/dev/null
 
@@ -12,4 +12,4 @@ do
     esac
 done
 
-sudo | nohup bash -c 'exec -a fan-client /opt/fan-control/start-fan-client.sh' >"$log_target" 2>&1 &
+nohup bash -c 'exec -a fan_client /opt/fan-control/fan-client' >"$log_target" 2>&1 &

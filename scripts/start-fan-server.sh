@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pgrep -x fan-server >/dev/null && echo "The fan-server is still running. Please stop it before you continue"; exit 12 || echo "Starting the fan-server"
+stop-fan-server
 
 log_target=/dev/null
 
@@ -12,4 +12,4 @@ do
     esac
 done
 
-nohup bash -c 'exec -a fan-server /opt/fan-control/start-fan-server.sh' >"$log_target" 2>&1 &
+nohup bash -c 'exec -a fan_server /opt/fan-control/fan-server' >"$log_target" 2>&1 &

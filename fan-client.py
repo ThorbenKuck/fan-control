@@ -11,7 +11,6 @@ client_props: ClientProperties = ClientProperties(settings_path)
 mqtt_props: MqttProperties = MqttProperties(settings_path)
 mqtt_props.topic = mqtt_props.topic.replace("+", client_props.name)
 mqtt_props.client_id = mqtt_props.client_id + "-client"
-debug_enabled = client_props.debug_enabled
 
 
 def read_temps(path: str):
@@ -36,16 +35,21 @@ def debug(*args, sep=' ', end='\n'):
         )
 
 
-print("creating new instance", "\"" + mqtt_props.client_id + "\"")
-client = mqtt.Client(mqtt_props.client_id)
-client.username_pw_set(
-    username=mqtt_props.username,
-    password=mqtt_props.password
-)
-debug("Connecting with username=", mqtt_props.username, ", password=", mqtt_props.password, sep="")
-print("connecting to broker", "\"" + mqtt_props.broker + "\"", "... ", end='')
-client.connect(mqtt_props.broker)
-print("[OK]")
+def create_client():
+    if client_props.debug_enabled:
+        print("creating new instance", "\"" + mqtt_props.client_id + "\"")
+    client = mqtt.Client(mqtt_props.client_id)
+    client.username_pw_set(
+        username=mqtt_props.username,
+        password=mqtt_props.password
+    )
+    debug("Connecting with username=", mqtt_props.username, ", password=", mqtt_props.password, sep="")
+    if client_props.debug_enabled:
+        print("connecting to broker", "\"" + mqtt_props.broker + "\"", "... ", end='')
+    client.connect(mqtt_props.broker)
+    if client_props.debug_enabled:
+        print("[OK]")
+    return client
 
 
 class FileModifiedHandler:
@@ -69,10 +73,12 @@ class FileModifiedHandler:
                 temperature = int(f.readlines()[0].strip())
                 if temperature != self.last_known_temp:
                     print("Publishing new temperature", temperature, "to topic", mqtt_props.topic, "... ", end="")
+                    client = create_client()
                     client.publish(
                         topic=mqtt_props.topic,
                         payload=temperature
                     ).wait_for_publish()
+                    client.disconnect()
                     print("[OK]")
                     self.last_known_temp = temperature
                 else:
