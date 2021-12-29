@@ -20,7 +20,7 @@ def read_temps(path: str):
 
 
 def debug(*args, sep=' ', end='\n'):
-    if debug_enabled:
+    if client_props.debug_enabled:
         prefix: str
         if sep != ' ':
             prefix = "[DEBUG]: "
@@ -43,7 +43,7 @@ def create_client():
         username=mqtt_props.username,
         password=mqtt_props.password
     )
-    debug("Connecting with username=", mqtt_props.username, ", password=", mqtt_props.password, sep="")
+    debug(f"Connecting with username={mqtt_props.username}, password={mqtt_props.password}")
     if client_props.debug_enabled:
         print("connecting to broker", "\"" + mqtt_props.broker + "\"", "... ", end='')
     client.connect(mqtt_props.broker)
@@ -59,7 +59,10 @@ class FileModifiedHandler:
         self.last_known_temp = -1
 
         print("Starting the observer on \"" + path + "\" ... ", end="")
-        self.observer = Thread(target=self.process_temps, daemon=True)
+        self.observer = Thread(
+            target=self.process_temps,
+            daemon=True
+        )
         self.observer.start()
         print("[OK]")
         print("Ready to use!")

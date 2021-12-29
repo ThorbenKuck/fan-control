@@ -35,7 +35,7 @@ if [[ "$published_at" > "$last_known_release" ]]; then
   cd /opt/fan-control/ || exit 12
   echo "[INFO]: Clearing work directory"
   sudo rm -rf "$work_dir"
-  echo "$published_at" > "/opt/fan-control/meta-inf/released"
+  sudo bash -c 'printf "%s" "$published_at" >/opt/fan-control/meta-inf/released'
 
   if [ "$server_running" ]; then
     sudo bash "start-fan-server.sh"
